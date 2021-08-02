@@ -204,10 +204,17 @@ class _ExplorePageState extends State<ExplorePage>
                                 child: Container(
                                   width: size.width * 0.2,
                                   child: Center(
-                                    child: Icon(
-                                      Icons.info,
-                                      color: white,
-                                      size: 28,
+                                    child: TextButton(
+                                      onPressed: () => {print("Info button pressed")},
+                                      child: Column( // Replace with a Row for horizontal icon + text
+                                        children: <Widget>[
+                                          Icon(
+                                            Icons.info,
+                                            color: white,
+                                            size: 28,
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),

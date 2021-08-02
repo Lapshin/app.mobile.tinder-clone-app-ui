@@ -3,7 +3,12 @@ import 'package:flutter_svg/svg.dart';
 import 'package:flutter_tindercard/flutter_tindercard.dart';
 import 'package:tinder_clone/data/explore_json.dart';
 import 'package:tinder_clone/data/icons.dart';
+import 'package:tinder_clone/pages/popup_card.dart';
+import 'package:tinder_clone/pages/custom_rect_tween.dart';
+import 'package:tinder_clone/pages/hero_dialog_route.dart';
 import 'package:tinder_clone/theme/colors.dart';
+
+int currentIndex = 0;
 
 class ExplorePage extends StatefulWidget {
   @override
@@ -90,7 +95,7 @@ class _ExplorePageState extends State<ExplorePage>
                           child: Row(
                             children: [
                               Container(
-                                width: size.width * 0.72,
+                                width: size.width * 0.65,
                                 child: Column(
                                   children: [
                                     Row(
@@ -204,16 +209,30 @@ class _ExplorePageState extends State<ExplorePage>
                                 child: Container(
                                   width: size.width * 0.2,
                                   child: Center(
-                                    child: TextButton(
-                                      onPressed: () => {print("Info button pressed")},
-                                      child: Column( // Replace with a Row for horizontal icon + text
-                                        children: <Widget>[
-                                          Icon(
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(context, HeroDialogRoute(
+                                            builder: (context) => PopupCard(
+                                                currentIndex.toString(),
+                                            itemsTemp[index]['description'])
+                                        ));
+                                      },
+                                      child: Hero (
+                                        tag: index.toString(),
+                                        createRectTween: (begin, end) {
+                                          return CustomRectTween(begin: begin, end: end);
+                                        },
+                                        child: Material(
+                                          color: Colors.white70,
+                                          elevation: 2,
+                                          shape:
+                                          RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+                                          child: Icon(
                                             Icons.info,
                                             color: white,
                                             size: 28,
                                           ),
-                                        ],
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -241,6 +260,10 @@ class _ExplorePageState extends State<ExplorePage>
           },
           swipeCompleteCallback: (CardSwipeOrientation orientation, int index) {
             /// Get orientation & index of swiped card!
+            if (CardSwipeOrientation.RECOVER != orientation) {
+              currentIndex = index + 1;
+            }
+            print("currentIndex ${currentIndex} orientation ${orientation}");
             if (index == (itemsTemp.length - 1)) {
               setState(() {
                 itemLength = itemsTemp.length - 1;
